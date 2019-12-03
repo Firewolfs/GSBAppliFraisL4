@@ -43,10 +43,12 @@
                         <ul class="nav navbar-nav"> 
                             <li><a href="{{ url('/saisirFraisForfait') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Saisir Frais</a></li>
                             <li><a href="{{ url('/getListeFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Voir Frais</a></li>
-                        </ul>  
+                            <li><a href="{{ url('/ajoutVisiteur') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Test Ajout</a></li>
+                            <li><a href="{{ url('/modifierCompte') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Test Modif</a></li>
+                        </ul>
                         <ul class="nav navbar-nav navbar-right">                             
                             <li><a href="{{ url('/Logout') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Se déconnecter</a></li>
-                        </ul> 
+                        </ul>
                     </div> 
  @endif 
                 </div><!--/.container-fluid -->

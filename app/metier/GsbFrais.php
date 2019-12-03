@@ -14,12 +14,25 @@ class GsbFrais{
  * @param $mdp
  * @return l'id, le nom et le prénom sous la forme d'un objet 
 */
-public function getInfosVisiteur($login, $mdp){
-        $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
-        where visiteur.login=:login and visiteur.mdp=:mdp";
-        $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
-        return $ligne;
-}
+    public function getInfosVisiteur($login, $mdp){
+            $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
+            where visiteur.login=:login and visiteur.mdp=:mdp";
+            $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
+            return $ligne;
+    }
+
+    public function addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $town, $hireDate, $tel, $mail) {
+        $request = "insert into visiteur (id, nom, prenom, login, mdp, adresse, cp, ville, dateEmbauche, tel, email)
+            VALUES (:id, :nom, :prenom, :login, :mdp, :addr, :cp, :ville, :dateEmb, :tel, :mail)";
+        DB::insert($request, ['id'=>$id, 'nom'=>$name, 'prenom'=>$firstName, 'login'=>$login, 'mdp'=>sha1($mdp), 'addr'=>$address, 'cp'=>$cp, 'ville'=>$town, 'dateEmb'=>$hireDate, 'tel'=>$tel, 'mail'=>$mail]);
+    }
+
+    public function getModifInfo($id) {
+        $request = "select * from visiteur WHERE id=:id";
+        $result = DB::select($request, ['id' => $id]);
+        return $result;
+    }
+
 /**
  * Retourne sous forme d'un tableau d'objets toutes les lignes de frais hors forfait
  * concernées par les deux arguments
