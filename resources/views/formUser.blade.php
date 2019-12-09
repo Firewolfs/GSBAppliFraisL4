@@ -48,6 +48,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-3 col-sm-3 control-label">Rôle :</label>
+                <div class="col-md-3 col-sm-3">
+                    <input type="radio" name="role" id="role" value="Visiteur">Visiteur
+                    <input type="radio" name="role" id="role" value="Délégué">Délégué
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-3 col-sm-3 control-label">Région d'affectation :</label>
                 <div class="col-md-3 col-sm-3">
                     <select name="region" id="region">

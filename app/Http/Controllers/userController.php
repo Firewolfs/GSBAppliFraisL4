@@ -33,14 +33,20 @@ class userController extends Controller {
         $tel = $request->input('tel');
         $mail = $request->input('mail');
         $region = $request->input('region');
+        $role = $request->input('role');
 
         $id = $this->generagetId(strtolower(substr($name, 0,1)));
 
-        $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail, $region);
+        $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail, $region, $role);
 
         return view('confirmInscript', compact('login', 'mdp'));
     }
 
+    /**
+     * Récupère la liste des Régions
+     *
+     * @return type Vue formUser, avec tableau associatif de Région
+     */
     public function getRegion() {
         $bdd = new GsbFrais();
         $lesRegion = $bdd->getRegion();
@@ -73,7 +79,7 @@ class userController extends Controller {
     private function generatePassword() {
         $password = '';
         $chaine = '0123456789abcdefghijklmnopqrstuvwxyz';
-        for ($i = 0; $i < 5; $i++){
+        for ($i = 0; $i < 6; $i++){
             $password .= $chaine[rand(0, strlen($chaine) - 1)];
         }
 
