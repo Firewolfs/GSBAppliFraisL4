@@ -53,13 +53,13 @@ Route::post('/validerFraisHorsForfait', 'FraisHorsForfaitController@validerFrais
 // Supprimer un Frais Hors Forfait
 Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@supprimmerFraisHorsForfait');
 
+// Afficher le formulaire d'ajout d'un nouveau visiteur
 Route::get('/ajoutVisiteur', function () {
    return view('formUser');
 });
 
+// Ajoute un nouveau visiteur
 Route::post('/addVisitor', 'userController@addVisiteur');
-
-Route::get('/modifierCompte', 'userController@getInfoToUpdate');
 
 // Retourner à une vue dont on passe le nom en paramètre
 Route::get('getRetour/{retour}', function($retour){

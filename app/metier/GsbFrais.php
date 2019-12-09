@@ -21,16 +21,25 @@ class GsbFrais{
             return $ligne;
     }
 
+    /**
+     * Insère un nouveau visiteur dans la pase de donnée.
+     *
+     * @param $id
+     * @param $name
+     * @param $firstName
+     * @param $login
+     * @param $mdp
+     * @param $address
+     * @param $cp
+     * @param $town
+     * @param $hireDate
+     * @param $tel
+     * @param $mail
+     */
     public function addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $town, $hireDate, $tel, $mail) {
         $request = "insert into visiteur (id, nom, prenom, login, mdp, adresse, cp, ville, dateEmbauche, tel, email)
             VALUES (:id, :nom, :prenom, :login, :mdp, :addr, :cp, :ville, :dateEmb, :tel, :mail)";
         DB::insert($request, ['id'=>$id, 'nom'=>$name, 'prenom'=>$firstName, 'login'=>$login, 'mdp'=>sha1($mdp), 'addr'=>$address, 'cp'=>$cp, 'ville'=>$town, 'dateEmb'=>$hireDate, 'tel'=>$tel, 'mail'=>$mail]);
-    }
-
-    public function getModifInfo($id) {
-        $request = "select * from visiteur WHERE id=:id";
-        $result = DB::select($request, ['id' => $id]);
-        return $result;
     }
 
 /**

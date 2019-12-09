@@ -9,11 +9,22 @@ use App\metier\GsbFrais;
 
 class userController extends Controller {
 
+    /**
+     * @param Request $request
+     * @return type Vue confirmInscript, avec tableau associatif de login et mdp
+     */
     public function addVisiteur(Request $request) {
+        $this->validate($request, [
+            'address' => ['bail', 'required', "regex:/[0-9]{1,3}\s[a-z\séèàêâùïüëA-Z-']{1,29}/"],
+            'ville' => ['bail', 'required', "regex:/^[a-zéèàêâùïüëA-Z][a-zéèàêâùïüëA-Z-'\s]{1,30}$/"],
+            'cp' => ['bail', 'required', 'digits:5'],
+            'tel' => ['bail', 'required', 'digits_between:3,15'],
+            'mail' => ['bail', 'required', 'email']
+        ]);
         $bdd = new GsbFrais();
         $name = $request->input('name');
         $firstName = $request->input('firstName');
-        $login = substr($firstName, 0,1).$name;
+        $login = strtolower(substr($firstName, 0,1).$name);
         $mdp = $this->generatePassword();
         $address = $request->input('address');
         $cp = $request->input('cp');
@@ -22,21 +33,19 @@ class userController extends Controller {
         $tel = $request->input('tel');
         $mail = $request->input('mail');
 
-        $id = $this->generagetId(substr($name, 0,1));
+        $id = $this->generagetId(strtolower(substr($name, 0,1)));
 
         $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail);
 
         return view('confirmInscript', compact('login', 'mdp'));
     }
 
-    public function getInfoToUpdate(){
-        $unVisiteur = new GsbFrais();
-        $idVisiteur = Session::get('id');
-        $mesInfos = $unVisiteur->getModifInfo($idVisiteur);
-
-        return redirect('/modifierCompte')->with(compact('mesInfos'));
-    }
-
+    /**
+     * Génère un identifiant aléatoire composer entre 2 et 4 caractères.
+     *
+     * @param $firstChar
+     * @return string
+     */
     private function generagetId($firstChar){
         $id = $firstChar;
         $long = rand(1, 3);
@@ -48,6 +57,11 @@ class userController extends Controller {
         return $id;
     }
 
+    /**
+     * Génère un mot de passe aléatoire de 5 caractères.
+     *
+     * @return string
+     */
     private function generatePassword() {
         $password = '';
         $chaine = '0123456789abcdefghijklmnopqrstuvwxyz';
