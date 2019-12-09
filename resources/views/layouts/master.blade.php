@@ -51,9 +51,12 @@
                                 <li><a href="{{ url('/getGestionUtilisateurs') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion des utilisateurs</a></li>
                             @endif
                         </ul>  
+                            <li><a href="{{ url('/ajoutVisiteur') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Test Ajout</a></li>
+                            <li><a href="{{ url('/modifierCompte') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Test Modif</a></li>
+                        </ul>
                         <ul class="nav navbar-nav navbar-right">                             
                             <li><a href="{{ url('/Logout') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Se déconnecter</a></li>
-                        </ul> 
+                        </ul>
                     </div> 
  @endif 
                 </div><!--/.container-fluid -->

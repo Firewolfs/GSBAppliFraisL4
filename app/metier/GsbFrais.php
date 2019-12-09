@@ -14,6 +14,7 @@ class GsbFrais{
  * @param $mdp
  * @return l'id, le nom et le prénom sous la forme d'un objet 
 */
+<<<<<<< HEAD
 public function getInfosVisiteur($login, $mdp){
 		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom, vaffectation.aff_role as aff_role, vaffectation.reg_nom as region, vaffectation.sec_nom as sec_nom, vaffectation.aff_sec as secteur, vaffectation.aff_reg as region_code
 		from visiteur inner join vaffectation on vaffectation.idVisiteur = visiteur.id
@@ -33,6 +34,49 @@ public function getInfosPerso($id){
 	$ligne = DB::select($req, ['id'=>$id]);
 	return $ligne[0];
 }
+=======
+    public function getInfosVisiteur($login, $mdp){
+            $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
+            where visiteur.login=:login and visiteur.mdp=:mdp";
+            $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
+            return $ligne;
+    }
+
+    /**
+     * Insère un nouveau visiteur dans la pase de donnée.
+     *
+     * @param $id
+     * @param $name
+     * @param $firstName
+     * @param $login
+     * @param $mdp
+     * @param $address
+     * @param $cp
+     * @param $town
+     * @param $hireDate
+     * @param $tel
+     * @param $mail
+     */
+    public function addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $town, $hireDate, $tel, $mail, $region, $role) {
+        $request = "insert into visiteur (id, nom, prenom, login, mdp, adresse, cp, ville, dateEmbauche, tel, email)
+            VALUES (:id, :nom, :prenom, :login, :mdp, :addr, :cp, :ville, :dateEmb, :tel, :mail)";
+        $request1 = "insert into travailler (idVisiteur, tra_date, tra_reg, tra_role)
+            VALUES (:idVisi, :dateDbt, :region, :role)";
+        DB::insert($request, ['id'=>$id, 'nom'=>$name, 'prenom'=>$firstName, 'login'=>$login, 'mdp'=>sha1($mdp), 'addr'=>$address, 'cp'=>$cp, 'ville'=>$town, 'dateEmb'=>$hireDate, 'tel'=>$tel, 'mail'=>$mail]);
+        DB::insert($request1, ['idVisi'=>$id, 'dateDbt'=>$hireDate, 'region'=>$region, 'role'=>$role]);
+    }
+
+    /**
+     * Récupère la liste des régions
+     *
+     * @return un objet avec tous les champs des lignes de region
+     */
+    public function getRegion() {
+        $request = "SELECT * FROM region";
+        $result = DB::select($request);
+        return $result;
+    }
+>>>>>>> 356b3267fed77fa0272227b85261013208a40602
 
 /**
  * Retourne sous forme d'un tableau d'objets toutes les lignes de frais hors forfait
