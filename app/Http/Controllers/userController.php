@@ -49,7 +49,8 @@ class userController extends Controller {
      */
     public function getRegion() {
         $bdd = new GsbFrais();
-        $lesRegion = $bdd->getRegion();
+        $secteur = Session::get('sec_code');
+        $lesRegion = $bdd->getRegion($secteur);
 
         return view('formUser', compact('lesRegion'));
     }

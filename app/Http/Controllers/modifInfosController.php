@@ -24,6 +24,12 @@ class modifInfosController extends Controller {
         return view('formModifInfos', compact('info', 'erreur'));
     }
 
+    /**
+     * Vérifie les infos et met à jour l'utilisateur dans le base de données
+     *
+     * @param Request $request
+     * @return type Vue confirmModifIngos
+     */
     public function verifInfos(Request $request) {
         $this->validate($request, [
             'adresse' => ['bail', 'required', "regex:/[0-9]{1,3}\s[a-z\séèàêâùïüëA-Z-']{1,29}/"],

@@ -53,21 +53,21 @@ Route::post('/validerFraisHorsForfait', 'FraisHorsForfaitController@validerFrais
 // Supprimer un Frais Hors Forfait
 Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@supprimmerFraisHorsForfait');
 
-<<<<<<< HEAD
+// Afficher le formulaire pré-remplis de modification des informations personnels
 Route::get('/modifInfos', 'modifInfosController@affFormModifInfos');
 
+// Met à jour les données personnels
 Route::post('/modifInfos', 'modifInfosController@verifInfos');
 
 // Gestion des utilisateurs (Visiteurs et Délégués)
-Route::get('/gestionUtilisateurs', 'getGestionUtilisateurs@getVisiteursSecteur');
-Route::get('/gestionUtilisateurs', 'getGestionUtilisateurs@getDeleguesSecteur');
-=======
+Route::get('/gestionUtilisateurs', 'getGestionUtilisateursController@getVisiteursSecteur');
+Route::get('/gestionUtilisateurs', 'getGestionUtilisateursController@getDeleguesSecteur');
+
 // Afficher le formulaire d'ajout d'un nouveau visiteur
 Route::get('/ajoutVisiteur', 'userController@getRegion');
 
 // Ajoute un nouveau visiteur
 Route::post('/addVisitor', 'userController@addVisiteur');
->>>>>>> 356b3267fed77fa0272227b85261013208a40602
 
 // Retourner à une vue dont on passe le nom en paramètre
 Route::get('getRetour/{retour}', function($retour){

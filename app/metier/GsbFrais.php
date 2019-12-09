@@ -14,14 +14,13 @@ class GsbFrais{
  * @param $mdp
  * @return l'id, le nom et le prénom sous la forme d'un objet 
 */
-<<<<<<< HEAD
-public function getInfosVisiteur($login, $mdp){
-		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom, vaffectation.aff_role as aff_role, vaffectation.reg_nom as region, vaffectation.sec_nom as sec_nom, vaffectation.aff_sec as secteur, vaffectation.aff_reg as region_code
-		from visiteur inner join vaffectation on vaffectation.idVisiteur = visiteur.id
-        where visiteur.login=:login and visiteur.mdp=:mdp";
-        $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
-        return $ligne;
-}
+    public function getInfosVisiteur($login, $mdp){
+            $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom, vaffectation.aff_role as aff_role, vaffectation.reg_nom as region, vaffectation.sec_nom as sec_nom, vaffectation.aff_sec as secteur, vaffectation.aff_reg as region_code
+            from visiteur inner join vaffectation on vaffectation.idVisiteur = visiteur.id
+            where visiteur.login=:login and visiteur.mdp=:mdp";
+            $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
+            return $ligne;
+    }
 
 /**
  * Retourne les informations personnelles d'un visiteur
@@ -29,17 +28,10 @@ public function getInfosVisiteur($login, $mdp){
  * @param $id 
  * @return la ville et le cp sous la forme d'un objet 
 */
-public function getInfosPerso($id){
-	$req = "select adresse, cp, ville, tel, email from visiteur where visiteur.id=:id";
-	$ligne = DB::select($req, ['id'=>$id]);
-	return $ligne[0];
-}
-=======
-    public function getInfosVisiteur($login, $mdp){
-            $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
-            where visiteur.login=:login and visiteur.mdp=:mdp";
-            $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
-            return $ligne;
+    public function getInfosPerso($id){
+        $req = "select adresse, cp, ville, tel, email from visiteur where visiteur.id=:id";
+        $ligne = DB::select($req, ['id'=>$id]);
+        return $ligne[0];
     }
 
     /**
@@ -71,12 +63,11 @@ public function getInfosPerso($id){
      *
      * @return un objet avec tous les champs des lignes de region
      */
-    public function getRegion() {
-        $request = "SELECT * FROM region";
-        $result = DB::select($request);
+    public function getRegion($sec) {
+        $request = "SELECT id, reg_nom FROM region WHERE sec_code = :sec";
+        $result = DB::select($request, ['sec'=>$sec]);
         return $result;
     }
->>>>>>> 356b3267fed77fa0272227b85261013208a40602
 
 /**
  * Retourne sous forme d'un tableau d'objets toutes les lignes de frais hors forfait
@@ -335,8 +326,7 @@ public function getInfosPerso($id){
 	 *
 	 * 
 	 **/
-	public function calculFicheFrais($idVisiteur, $mois)
-	{
+	public function calculFicheFrais($idVisiteur, $mois) {
 		$req= "UPDATE fichefrais SET montantValide = (SELECT SUM(quantite * fraisforfait.montant) FROM lignefraisforfait INNER JOIN fraisforfait 
 		ON lignefraisforfait.idFraisForfait = fraisforfait.id WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) + (SELECT SUM(montant) 
 		FROM lignefraishorsforfait WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) WHERE idVisiteur = :idVisiteur AND mois = :mois;";
