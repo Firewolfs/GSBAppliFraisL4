@@ -47,6 +47,16 @@
                     <input type="text" name="ville" id="ville" class="form-control" maxlength="30" pattern="^[a-zéèàêâùïüëA-Z][a-zéèàêâùïüëA-Z-'\s]{1,30}$" required>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 control-label">Région d'affectation :</label>
+                <div class="col-md-3 col-sm-3">
+                    <select name="region" id="region">
+                        @foreach ($lesRegion as $region)
+                            <option value="{{$region->id}}">{{$region->reg_nom}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">

@@ -32,12 +32,20 @@ class userController extends Controller {
         $dateEmb = date('Y-m-d');
         $tel = $request->input('tel');
         $mail = $request->input('mail');
+        $region = $request->input('region');
 
         $id = $this->generagetId(strtolower(substr($name, 0,1)));
 
-        $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail);
+        $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail, $region);
 
         return view('confirmInscript', compact('login', 'mdp'));
+    }
+
+    public function getRegion() {
+        $bdd = new GsbFrais();
+        $lesRegion = $bdd->getRegion();
+
+        return view('formUser', compact('lesRegion'));
     }
 
     /**

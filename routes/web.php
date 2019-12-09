@@ -54,9 +54,7 @@ Route::post('/validerFraisHorsForfait', 'FraisHorsForfaitController@validerFrais
 Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@supprimmerFraisHorsForfait');
 
 // Afficher le formulaire d'ajout d'un nouveau visiteur
-Route::get('/ajoutVisiteur', function () {
-   return view('formUser');
-});
+Route::get('/ajoutVisiteur', 'userController@getRegion');
 
 // Ajoute un nouveau visiteur
 Route::post('/addVisitor', 'userController@addVisiteur');

@@ -36,10 +36,19 @@ class GsbFrais{
      * @param $tel
      * @param $mail
      */
-    public function addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $town, $hireDate, $tel, $mail) {
+    public function addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $town, $hireDate, $tel, $mail, $region) {
         $request = "insert into visiteur (id, nom, prenom, login, mdp, adresse, cp, ville, dateEmbauche, tel, email)
             VALUES (:id, :nom, :prenom, :login, :mdp, :addr, :cp, :ville, :dateEmb, :tel, :mail)";
+        $request1 = "insert into travailler (idVisiteur, tra_date, tra_reg, tra_role)
+            VALUES (:idVisi, :dateDbt, :region, 'Visiteur')";
         DB::insert($request, ['id'=>$id, 'nom'=>$name, 'prenom'=>$firstName, 'login'=>$login, 'mdp'=>sha1($mdp), 'addr'=>$address, 'cp'=>$cp, 'ville'=>$town, 'dateEmb'=>$hireDate, 'tel'=>$tel, 'mail'=>$mail]);
+        DB::insert($request1, ['idVisi'=>$id, 'dateDbt'=>$hireDate, 'region'=>$region]);
+    }
+
+    public function getRegion() {
+        $request = "SELECT * FROM region";
+        $result = DB::select($request);
+        return $result;
     }
 
 /**
