@@ -34,6 +34,8 @@ class VoirFraisController extends Controller
         $titreVue = "Liste de mes frais annuels";     
         return view('listeFrais', compact('mesFrais', 'titreVue'));
     }
+
+  
   /**
      * Affiche le détail (frais forfait et hors forfait)
      * @return type Vue detailFrais

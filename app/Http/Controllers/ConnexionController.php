@@ -29,9 +29,20 @@ class ConnexionController extends Controller
             $id = $visiteur->id;
             $nom =  $visiteur->nom;
             $prenom = $visiteur->prenom;
+            $aff_role = $visiteur->aff_role;
+            $region = $visiteur->region;
+            $sec_nom = $visiteur->sec_nom;
+            $sec_code = $visiteur->secteur;
+            $reg_code = $visiteur->region_code;
             Session::put('id', $id);
             Session::put('nom', $nom);
             Session::put('prenom', $prenom);
+            Session::put('login', $login);
+            Session::put('region', $region);
+            Session::put('reg_code', $reg_code);
+            Session::put('sec_nom', $sec_nom);
+            Session::put('sec_code', $sec_code);
+            Session::put('aff_role', $aff_role);
 //            return view('home');
             return redirect('/');
         }

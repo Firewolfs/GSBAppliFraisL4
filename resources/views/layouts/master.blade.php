@@ -38,11 +38,18 @@
                     </div>
  
   @else  
-                    <a class="navbar-brand" href="#">{{Session::get('nom')}} {{Session::get('prenom')}}</a> 
+                    <a class="navbar-brand" href="{{ url('/modifInfos') }}">{{Session::get('nom')}} {{Session::get('prenom')}}</a> 
                     <div class="collapse navbar-collapse" id="navbar-collapse-target">
                         <ul class="nav navbar-nav"> 
                             <li><a href="{{ url('/saisirFraisForfait') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Saisir Frais</a></li>
                             <li><a href="{{ url('/getListeFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Voir Frais</a></li>
+                             @if (Session::get('aff_role') == 'Responsable' || Session::get('aff_role') == 'Délégué')
+                                    <li><a href="{{ url('/getGestionFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion Frais</a></li>
+                            @endif
+                            @if (Session::get('aff_role') == 'Responsable')
+                            
+                                <li><a href="{{ url('/getGestionUtilisateurs') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion des utilisateurs</a></li>
+                            @endif
                         </ul>  
                         <ul class="nav navbar-nav navbar-right">                             
                             <li><a href="{{ url('/Logout') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Se déconnecter</a></li>

@@ -53,6 +53,14 @@ Route::post('/validerFraisHorsForfait', 'FraisHorsForfaitController@validerFrais
 // Supprimer un Frais Hors Forfait
 Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@supprimmerFraisHorsForfait');
 
+Route::get('/modifInfos', 'modifInfosController@affFormModifInfos');
+
+Route::post('/modifInfos', 'modifInfosController@verifInfos');
+
+// Gestion des utilisateurs (Visiteurs et Délégués)
+Route::get('/gestionUtilisateurs', 'getGestionUtilisateurs@getVisiteursSecteur');
+Route::get('/gestionUtilisateurs', 'getGestionUtilisateurs@getDeleguesSecteur');
+
 // Retourner à une vue dont on passe le nom en paramètre
 Route::get('getRetour/{retour}', function($retour){
     return redirect("/".$retour);

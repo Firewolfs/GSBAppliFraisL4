@@ -15,11 +15,25 @@ class GsbFrais{
  * @return l'id, le nom et le prénom sous la forme d'un objet 
 */
 public function getInfosVisiteur($login, $mdp){
-        $req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
+		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom, vaffectation.aff_role as aff_role, vaffectation.reg_nom as region, vaffectation.sec_nom as sec_nom, vaffectation.aff_sec as secteur, vaffectation.aff_reg as region_code
+		from visiteur inner join vaffectation on vaffectation.idVisiteur = visiteur.id
         where visiteur.login=:login and visiteur.mdp=:mdp";
-        $ligne = DB::select($req, ['login'=>$login, 'mdp'=>$mdp]);
+        $ligne = DB::select($req, ['login'=>$login, 'mdp'=>sha1($mdp)]);
         return $ligne;
 }
+
+/**
+ * Retourne les informations personnelles d'un visiteur
+ 
+ * @param $id 
+ * @return la ville et le cp sous la forme d'un objet 
+*/
+public function getInfosPerso($id){
+	$req = "select adresse, cp, ville, tel, email from visiteur where visiteur.id=:id";
+	$ligne = DB::select($req, ['id'=>$id]);
+	return $ligne[0];
+}
+
 /**
  * Retourne sous forme d'un tableau d'objets toutes les lignes de frais hors forfait
  * concernées par les deux arguments
@@ -50,10 +64,10 @@ public function getInfosVisiteur($login, $mdp){
  * @return un objet contenant les frais forfait du mois
 */
 	public function getLesFraisForfait($idVisiteur, $mois){
-		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, ligneFraisForfait.mois as mois,
+		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, lignefraisforfait.mois as mois,
 		lignefraisforfait.quantite as quantite from lignefraisforfait inner join fraisforfait 
 		on fraisforfait.id = lignefraisforfait.idfraisforfait
-		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois=:mois
+		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois = :mois
 		order by lignefraisforfait.idfraisforfait";	
 //                echo $req;
                 $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
@@ -250,5 +264,40 @@ public function getInfosVisiteur($login, $mdp){
 		where fichefrais.idvisiteur = :idVisiteur and fichefrais.mois = :mois";
 		DB::update($req, ['etat'=>$etat, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
 	}
+
+
+	/**
+	 * Met à jour les informations d'un utilisateur
+	 *
+	 * @param $idVisiteur id de l'utilisateur
+	 * @param $adresse nouvelle adresse de l'utilisateur
+	 * @param $cp nouveau code postal de l'utilisateur
+	 * @param $ville nouvelle ville de l'utilisateur
+	 * @param $tel nouveau téléphone de l'utilisateur
+	 * @param $email nouvelle email de l'utilistateur
+	 **/
+	public function majInfosUtilisateur($idVisiteur, $adresse, $cp, $ville, $tel, $email)
+	{
+		$req = "UPDATE visiteur SET adresse = :adresse, cp = :cp, ville = :ville, tel = :tel, email = :email WHERE id = :idVisiteur;";
+		DB::update($req, ['adresse'=>$adresse, 'cp'=>$cp, 'ville'=>$ville, 'tel'=>$tel, 'email'=>$email, 'idVisiteur'=>$id]);
+	}
+
+
+	/**
+	 * Calcul de la fiche frais du mois
+	 *
+	 * @param $idVisiteur id de l'utilisateur
+	 * @param $mois mois de la fiche de frais
+	 *
+	 * 
+	 **/
+	public function calculFicheFrais($idVisiteur, $mois)
+	{
+		$req= "UPDATE fichefrais SET montantValide = (SELECT SUM(quantite * fraisforfait.montant) FROM lignefraisforfait INNER JOIN fraisforfait 
+		ON lignefraisforfait.idFraisForfait = fraisforfait.id WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) + (SELECT SUM(montant) 
+		FROM lignefraishorsforfait WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) WHERE idVisiteur = :idVisiteur AND mois = :mois;";
+		DB::update($req, ['idVisteur'=>$idVisiteur, 'mois'=>$mois]);
+	}
+
 }
 ?>
