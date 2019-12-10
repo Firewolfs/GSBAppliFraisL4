@@ -37,9 +37,58 @@ class userController extends Controller {
 
         $id = $this->generagetId(strtolower(substr($name, 0,1)));
 
-        $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail, $region, $role);
+        if ($bdd->existVisitor($id, $login)){
+            $error = 'Le visiteur existe déjà !';
+            return redirect('/ajoutVisiteur')->with(compact('error'));
+        } else {
+            $bdd->addUser($id, $name, $firstName, $login, $mdp, $address, $cp, $ville, $dateEmb, $tel, $mail, $region, $role);
+            return view('confirmInscript', compact('login', 'mdp'));
+        }
+    }
 
-        return view('confirmInscript', compact('login', 'mdp'));
+    /**
+     * Initialise le formulaire de saisie des Frais
+     *
+     * @return type Vue formSaisirFrais, avec tableau associatif des informations
+     */
+    public function affFormModifInfos() {
+        $erreur = "";
+        $idVisiteur = Session::get('id');
+        $gsbFrais = new GsbFrais();
+        $info = $gsbFrais->getInfosPerso($idVisiteur);
+        // Affiche le formulaire en lui fournissant les données à afficher
+        // la fonction compact équivaut à array('lesFrais' => $lesFrais, ...)
+        return view('formModifInfos', compact('info', 'erreur'));
+    }
+
+    /**
+     * Vérifie les infos et met à jour l'utilisateur dans le base de données
+     *
+     * @param Request $request
+     * @return type Vue confirmModifIngos
+     */
+    public function verifInfos(Request $request) {
+        $this->validate($request, [
+            'adresse' => ['bail', 'required', "regex:/[0-9]{1,3}\s[a-z\séèàêâùïüëA-Z-']{1,29}/"],
+            'ville' => ['bail', 'required', "regex:/^[a-zéèàêâùïüëA-Z][a-zéèàêâùïüëA-Z-'\s]{1,30}$/"],
+            'cp' => ['bail', 'required', 'digits:5'],
+            'tel' => ['bail', 'required', 'digits_between:3,15'],
+            'email' => ['bail', 'required', 'email']
+        ]);
+        //Récupérer les donées pour mettre a jour
+        $adresse = $request->input('adresse');
+        $cp = $request->input('cp');
+        $ville = $request->input('ville');
+        $idVisiteur = Session::get('id');
+        $tel = $request->input('tel');
+        $email = $request->input('email');
+
+        //Mise à jour des informations de l'utilisateur en base de données
+        $gsbFrais = new GsbFrais();
+        $gsbFrais->majInfosUtilisateur($idVisiteur, $adresse, $cp, $ville, $tel, $email);
+
+        // confirmer la mise à jour
+        return view('confirmModifInfos');
     }
 
     /**
@@ -53,6 +102,18 @@ class userController extends Controller {
         $lesRegion = $bdd->getRegion($secteur);
 
         return view('formUser', compact('lesRegion'));
+    }
+
+    /**
+     * Fonction qui récupère la liste des visiteurs d'un secteur
+     *
+     * @return type Vue listeSecteurVisiteur, avec tableau associatif de visiteurs
+     */
+    public function getSecteurVisiteur() {
+        $frais = new GsbFrais();
+        $session = Session::get('id');
+        $visiteurs = $frais->getSecteurVisiteur($session);
+        return view('listeSecteurVisiteur', compact('visiteurs'));
     }
 
     /**

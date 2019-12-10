@@ -69,6 +69,12 @@ class GsbFrais{
         return $result;
     }
 
+    public function existVisitor($id, $login) {
+        $request = "SELECT * FROM visiteur WHERE id = :id OR login = :login";
+        $result = DB::select($request, ['id'=>$id, 'login'=>$login]);
+        return $result[0];
+    }
+
 /**
  * Retourne sous forme d'un tableau d'objets toutes les lignes de frais hors forfait
  * concernées par les deux arguments
@@ -314,7 +320,7 @@ class GsbFrais{
 	public function majInfosUtilisateur($idVisiteur, $adresse, $cp, $ville, $tel, $email)
 	{
 		$req = "UPDATE visiteur SET adresse = :adresse, cp = :cp, ville = :ville, tel = :tel, email = :email WHERE id = :idVisiteur;";
-		DB::update($req, ['adresse'=>$adresse, 'cp'=>$cp, 'ville'=>$ville, 'tel'=>$tel, 'email'=>$email, 'idVisiteur'=>$id]);
+		DB::update($req, ['adresse'=>$adresse, 'cp'=>$cp, 'ville'=>$ville, 'tel'=>$tel, 'email'=>$email, 'idVisiteur'=>$idVisiteur]);
 	}
 
 

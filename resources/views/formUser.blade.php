@@ -2,6 +2,11 @@
 @section('content')
     {!! Form::open(['url' => 'addVisitor']) !!}
     <div class="col-md-12 col-sm-12 well well-md">
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{session('error')}}
+            </div>
+        @endif
         <h1>Inscrire un nouveau visiteur</h1>
         <br>
         <div class="form-horizontal">

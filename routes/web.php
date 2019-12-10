@@ -54,14 +54,14 @@ Route::post('/validerFraisHorsForfait', 'FraisHorsForfaitController@validerFrais
 Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@supprimmerFraisHorsForfait');
 
 // Afficher le formulaire pré-remplis de modification des informations personnels
-Route::get('/modifInfos', 'modifInfosController@affFormModifInfos');
+Route::get('/modifInfos', 'userController@affFormModifInfos');
 
 // Met à jour les données personnels
-Route::post('/modifInfos', 'modifInfosController@verifInfos');
+Route::post('/modifInfos', 'userController@verifInfos');
 
 // Gestion des utilisateurs (Visiteurs et Délégués)
-Route::get('/gestionUtilisateurs', 'getGestionUtilisateursController@getVisiteursSecteur');
-Route::get('/gestionUtilisateurs', 'getGestionUtilisateursController@getDeleguesSecteur');
+Route::get('/gestionUtilisateursVisiteur', 'userController@getVisiteursSecteur');
+Route::get('/gestionUtilisateursDelegue', 'userController@getDeleguesSecteur');
 
 // Afficher le formulaire d'ajout d'un nouveau visiteur
 Route::get('/ajoutVisiteur', 'userController@getRegion');
