@@ -54,6 +54,7 @@ class FraisHorsForfaitController extends Controller
      */
     public function saisirFraisHorsForfait($mois) {
         $titreVue = "Ajout d'un Frais Hors Forfait de la fiche " . $mois;
+        $unFraisHorsForfait = Array();
         // Affiche le formulaire en lui fournissant les données à afficher
         return view('formFraisHorsForfait', compact('unFraisHorsForfait', 'mois', 'titreVue'));
     }

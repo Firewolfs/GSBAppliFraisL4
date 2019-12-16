@@ -23,6 +23,7 @@ class FraisForfaitController extends Controller
         $gsbFrais = new GsbFrais();
         if ($gsbFrais->estPremierFraisMois($idVisiteur,$mois)){
             $gsbFrais->creeNouvellesLignesFrais($idVisiteur,$mois);
+            $gsbFrais->calculFicheFrais($idVisiteur, $mois);
         }
         $lesFrais = $gsbFrais->getLesFraisForfait($idVisiteur, $mois);
 //        print_r($lesFrais);

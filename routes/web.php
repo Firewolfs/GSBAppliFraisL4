@@ -59,18 +59,37 @@ Route::get('/modifInfos', 'userController@affFormModifInfos');
 // Met à jour les données personnels
 Route::post('/modifInfos', 'userController@verifInfos');
 
-// Gestion des utilisateurs (Visiteurs et Délégués)
-Route::get('/gestionUtilisateursVisiteur', 'userController@getVisiteursSecteur');
-Route::get('/gestionUtilisateursDelegue', 'userController@getDeleguesSecteur');
+//Met à jour le mot de passe
+Route::post('/modifMdp', 'userController@modifMdp');
+
+// Affiche la liste utilisateurs (Visiteurs et Délégués)
+Route::get('/gestionUtilisateurs', 'userController@getUser'); //
 
 // Afficher le formulaire d'ajout d'un nouveau visiteur
-Route::get('/ajoutVisiteur', 'userController@getRegion');
+Route::get('/ajoutVisiteur', 'userController@getRegion'); //
 
 // Ajoute un nouveau visiteur
-Route::post('/addVisitor', 'userController@addVisiteur');
+Route::post('/addVisitor', 'userController@addVisiteur'); 
 
 // Retourner à une vue dont on passe le nom en paramètre
 Route::get('getRetour/{retour}', function($retour){
     return redirect("/".$retour);
 });
 
+// Modifier les infos d'un visiteur
+Route::get('modifLesInfos/{idVisiteur}', 'userController@getOneUser'); //
+
+// Validation du formulaire de modification des infos
+Route::post('/modifUser', 'userController@update');
+
+
+// Gestion frais 
+Route::get('/gestionFrais', function () {
+    
+    if (Session::get('aff_role') == 'Délégué' || Session::get('aff_role') == 'Responsable') {
+        return view ('gestionFrais');
+    }
+    else {
+        return view('accesInterdit');
+    }
+ });

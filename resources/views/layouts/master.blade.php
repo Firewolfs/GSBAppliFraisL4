@@ -44,11 +44,10 @@
                             <li><a href="{{ url('/saisirFraisForfait') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Saisir Frais</a></li>
                             <li><a href="{{ url('/getListeFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Voir Frais</a></li>
                              @if (Session::get('aff_role') == 'Responsable' || Session::get('aff_role') == 'Délégué')
-                                    <li><a href="{{ url('/getGestionFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion Frais</a></li>
+                                    <li><a href="{{ url('/gestionFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion Frais</a></li>
                             @endif
                             @if (Session::get('aff_role') == 'Responsable')
-                                <li><a href="{{ url('/ajoutVisiteur') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Test Ajout</a></li>
-                                <li><a href="{{ url('/getGestionUtilisateurs') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion des utilisateurs</a></li>
+                                <li><a href="{{ url('/gestionUtilisateurs') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Gestion des utilisateurs</a></li>
                             @endif
                         </ul>  
 

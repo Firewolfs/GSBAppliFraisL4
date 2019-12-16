@@ -68,11 +68,6 @@
                     </button>
                 </div>
             </div>
-    @if (session('erreur'))
-            <div class="alert alert-danger">
-            {{ session('erreur') }}
-            </div>
-    @endif
         </div>
         {!! Form::close() !!}
     </div>
@@ -86,21 +81,21 @@
             <div class="form-group">
                 <label class="col-md-3 control-label">mot de passe actuel : </label>
                 <div class="col-md-6 col-md-3">
-                    <input type="password" name="mdpActuel" ng-model="mdpActuel" class="form-control" placeholder="Votre mot de passe actuel" required> 
-                    @if($errors->has('mdpActuel'))
+                <input type="password" name="mdpActuel" ng-model="mdpActuel" class="form-control" placeholder="Votre mot de passe actuel" required> 
+                @if (session('erreur'))
                     <div class="alert alert-danger">
-                        {{ $errors->first('mdpActuel') }}
+                        {{ session('erreur') }}
                     </div>
-                    @endif
-                    </div> 
+                @endif
+                </div> 
             </div>
             <div class="form-group">
                 <label class="col-md-3 control-label">nouveau mot de passe : </label>
                 <div class="col-md-6 col-md-3">
-                    <input type="password" name="nvMdp" ng-model="nvMdp" class="form-control" placeholder="Votre nouveau mot de passe" required>
-                    @if($errors->has('nvMdp'))
+                    <input type="password" name="newPassword" ng-model="newPassword" class="form-control" placeholder="Votre nouveau mot de passe" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])([a-zA-Z0-9$@%*+\-_!]{6,})" title="Le mot de passe doit avoir 6 carractères au minimum en majuscules et minuscules et chiffres">
+                    @if($errors->has('newPassword'))
                     <div class="alert alert-danger">
-                        {{ $errors->first('nvMdp') }}
+                        {{ $errors->first('newPassword') }}
                     </div>
                     @endif
                 </div>  
@@ -108,10 +103,10 @@
             <div class="form-group">
                 <label class="col-md-3 control-label">confirmation mot de passe : </label>
                 <div class="col-md-6 col-md-3">
-                    <input type="password" name="confirmMdp" ng-model="confirmMdp" class="form-control" placeholder="Confirmer votre mot de passe" required>
-                    @if($errors->has('confirmMdp'))
+                    <input type="password" name="newPassword_confirmation" ng-model="newPassword_confirmation" class="form-control" placeholder="Confirmer votre mot de passe" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])([a-zA-Z0-9$@%*+\-_!]{6,})" title="Le mot de passe doit avoir 6 carractères au minimum en majuscules et minuscules et chiffres">
+                    @if($errors->has('newPassword_confirmation'))
                     <div class="alert alert-danger">
-                        {{ $errors->first('confirmMdp') }}
+                        {{ $errors->first('newPassword_confirmation') }}
                     </div>
                     @endif
                 </div>  
@@ -123,11 +118,6 @@
                     </button>
                 </div>
             </div>
-    @if (session('erreur'))
-            <div class="alert alert-danger">
-            {{ session('erreur') }}
-            </div>
-    @endif
         </div>
         {!! Form::close() !!}
     </div>

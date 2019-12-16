@@ -29,7 +29,8 @@ class GsbFrais{
  * @return la ville et le cp sous la forme d'un objet 
 */
     public function getInfosPerso($id){
-        $req = "select adresse, cp, ville, tel, email from visiteur where visiteur.id=:id";
+		$req = "select id, nom, prenom, adresse, cp, ville, tel, email, aff_reg, aff_role from visiteur inner join 
+		vaffectation on visiteur.id = vaffectation.idVisiteur where visiteur.id= :id";
         $ligne = DB::select($req, ['id'=>$id]);
         return $ligne[0];
     }
@@ -69,10 +70,17 @@ class GsbFrais{
         return $result;
     }
 
+	/**
+	 * Vérifie si le visiteur existe déjà.
+	 * 
+     * @param $id
+     * @param $login
+     * @return int, nombre de ligne retourner par la requete
+     */
     public function existVisitor($id, $login) {
-        $request = "SELECT * FROM visiteur WHERE id = :id OR login = :login";
+        $request = "SELECT COUNT(*) AS existUser FROM visiteur WHERE id = :id OR login = :login";
         $result = DB::select($request, ['id'=>$id, 'login'=>$login]);
-        return $result[0];
+        return $result[0]->existUser;
     }
 
 /**
@@ -287,8 +295,8 @@ class GsbFrais{
  * @return un objet avec des champs de jointure entre une fiche de frais et la ligne d'état 
 */	
 	public function getLesInfosFicheFrais($idVisiteur,$mois){
-		$req = "select ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
-			ficheFrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join Etat on ficheFrais.idEtat = Etat.id 
+		$req = "select fichefrais.idEtat as idEtat, fichefrais.dateModif as dateModif, fichefrais.nbJustificatifs as nbJustificatifs, 
+			fichefrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join etat on fichefrais.idEtat = etat.id 
 			where fichefrais.idvisiteur = :idVisiteur and fichefrais.mois = :mois";
 		$lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur,'mois'=>$mois]);			
 		return $lesLignes[0];
@@ -301,7 +309,7 @@ class GsbFrais{
  */
  
 	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update ficheFrais set idEtat = :etat, dateModif = now() 
+		$req = "update fichefrais set idEtat = :etat, dateModif = now() 
 		where fichefrais.idvisiteur = :idVisiteur and fichefrais.mois = :mois";
 		DB::update($req, ['etat'=>$etat, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
 	}
@@ -333,11 +341,51 @@ class GsbFrais{
 	 * 
 	 **/
 	public function calculFicheFrais($idVisiteur, $mois) {
-		$req= "UPDATE fichefrais SET montantValide = (SELECT SUM(quantite * fraisforfait.montant) FROM lignefraisforfait INNER JOIN fraisforfait 
-		ON lignefraisforfait.idFraisForfait = fraisforfait.id WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) + (SELECT SUM(montant) 
-		FROM lignefraishorsforfait WHERE idVisiteur = fichefrais.idVisiteur AND mois = fichefrais.mois) WHERE idVisiteur = :idVisiteur AND mois = :mois;";
-		DB::update($req, ['idVisteur'=>$idVisiteur, 'mois'=>$mois]);
+		$req= "UPDATE fichefrais as laFiche SET montantValide = (SELECT SUM(quantite * fraisforfait.montant) FROM lignefraisforfait INNER JOIN fraisforfait 
+		ON lignefraisforfait.idFraisForfait = fraisforfait.id WHERE idVisiteur = laFiche.idVisiteur AND mois = laFiche.mois) + (SELECT SUM(montant) 
+		FROM lignefraishorsforfait WHERE idVisiteur = laFiche.idVisiteur AND mois = laFiche.mois) WHERE idVisiteur = :idVisiteur AND idEtat = 'CL' AND montantValide = 0";
+		DB::update($req, ['idVisiteur'=>$idVisiteur]);
 	}
 
+	/**
+	 * Met à jour le mot de passe d'un visiteur spécifié
+	 *
+	 *
+	 * @param $idVisiteur ID du visiteur pour lequel le mot de passe doit être modifié
+	 * @param $newMdp nouveau mot de passe du visiteur
+	 **/
+	public function miseAJourMdp($idVisiteur, $newMdp)
+	{
+		$req = "UPDATE visiteur SET mdp = SHA1(:newMdp) WHERE id = :idVisiteur;";
+		DB::update($req, ['idVisiteur'=>$idVisiteur, 'newMdp'=>$newMdp]);
+	}
+
+	/**
+	 * Récupère les visiteurs d'un secteur
+	 *
+	 *
+	 * @param $nomsecteur Nom du secteur du responsable qui veut gérer les visiteurs et délégués de son secteur
+	 * @return une liste de visiteur
+	 **/
+	public function getSecteurVisiteur($nomSecteur){
+		$req = "SELECT id, nom, prenom, vaffectation.aff_role, vaffectation.reg_nom, adresse, cp, ville, tel, email FROM visiteur INNER JOIN vaffectation
+		ON visiteur.id = vaffectation.idVisiteur WHERE vaffectation.aff_role = 'Visiteur' OR vaffectation.aff_role = 'Délégué' AND vaffectation.sec_nom = :secteur";
+        $result = DB::select($req, ['secteur'=>$nomSecteur]);
+        return $result;
+	}
+
+	/**
+	 * Met à jour le role et/ou la région d'un utilisateur
+	 * 
+     * @param $id
+     * @param $date
+     * @param $region
+     * @param string $role
+     */
+	public function updateVisiteur($id, $date, $region, $role = 'Visiteur') {
+        $request = "insert into travailler (idVisiteur, tra_date, tra_reg, tra_role)
+            VALUES (:idVisi, :dateDbt, :region, :role)";
+        DB::insert($request, ['idVisi'=>$id, 'dateDbt'=>$date, 'region'=>$region, 'role'=>$role]);
+    }
 }
 ?>
