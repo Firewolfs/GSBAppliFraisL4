@@ -369,7 +369,7 @@ class GsbFrais{
 	 **/
 	public function getSecteurVisiteur($nomSecteur){
 		$req = "SELECT id, nom, prenom, vaffectation.aff_role, vaffectation.reg_nom, adresse, cp, ville, tel, email FROM visiteur INNER JOIN vaffectation
-		ON visiteur.id = vaffectation.idVisiteur WHERE vaffectation.aff_role = 'Visiteur' OR vaffectation.aff_role = 'Délégué' AND vaffectation.sec_nom = :secteur";
+		ON visiteur.id = vaffectation.idVisiteur WHERE vaffectation.sec_nom = :secteur AND vaffectation.aff_role = 'Visiteur' OR vaffectation.aff_role = 'Délégué'";
         $result = DB::select($req, ['secteur'=>$nomSecteur]);
         return $result;
 	}
