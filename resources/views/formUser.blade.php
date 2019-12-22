@@ -77,7 +77,7 @@
                 </button>
                 &nbsp;
                 <button type="button" class="btn btn-default btn-primary"
-                        onclick="javascript: window.location = '{{ url('/saisirFraisForfait')}}';">
+                        onclick="javascript: window.location = '{{ url('/gestionUtilisateurs')}}';">
                     <span class="glyphicon glyphicon-remove"></span> Annuler</button>
             </div>
         </div>
